@@ -1,0 +1,26 @@
+{
+  "name": "wechatdevtools-cli",
+  "version": "0.0.1",
+  "description": "wechatdevtools command line launcher",
+  "main": "index.js",
+  "bin": {
+    "wechatdevtools": "cli.js",
+    "wechatdevtools-cli": "cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rocwind/wechatdevtools-cli.git"
+  },
+  "keywords": [
+    "wechatdevtools"
+  ],
+  "author": "Roc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rocwind/wechatdevtools-cli/issues"
+  },
+  "homepage": "https://github.com/rocwind/wechatdevtools-cli#readme"
+}
