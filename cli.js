@@ -15,6 +15,24 @@ function execute(cmd) {
     }
 }
 
+function addQuoteToCmd(cmd) {
+    if (!cmd) {
+        return cmd;
+    }
+    if (cmd.indexOf(' ') === -1
+        || /^"[^"]+"$/.test(cmd)
+        || /^'[^']+'$/.test(cmd)) {
+        return cmd;
+    }
+    return '"' + cmd + '"';
+}
+
+function addQuoteToArgs(args) {
+    return args.map(function(arg) {
+        return addQuoteToCmd(arg);
+    });
+}
+
 // for finding the cli location
 var cliFinder = {
     darwin: function() {
@@ -28,7 +46,7 @@ var cliFinder = {
             // unknown in registry - give a guess with default localtion
             return '';
         }
-        return path.join(path.dirname(match[1]), 'cli.bat');
+        return addQuoteToCmd(path.join(path.dirname(match[1]), 'cli.bat'));
     },
 }
 
@@ -62,6 +80,7 @@ if (args[0] === '--kill') {
     process.exit(0);
 }
 
-var out = execute(cli + ' ' + args.join(' '));
+
+var out = execute(cli + ' ' + addQuoteToArgs(args).join(' '));
 console.log(out);
 process.exit(0);
