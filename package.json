@@ -1,6 +1,6 @@
 {
   "name": "wechatdevtools-cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "wechatdevtools command line launcher",
   "main": "index.js",
   "bin": {
