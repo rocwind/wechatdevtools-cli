@@ -4,7 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var execSync = require('child_process').execSync;
 
-// execute cmd
+// execute cmd sync with return value
 function execute(cmd) {
     try {
         var stdout = execSync(cmd);
@@ -12,6 +12,17 @@ function execute(cmd) {
     } catch (ex) {
         console.error('execute failed: ' + cmd + ', error: ' + ex);
         return '';
+    }
+}
+
+// execute cmd with stdout inherit
+function executeVoid(cmd) {
+    try {
+        execSync(cmd, { stdio: [0, 1, 2] });
+        return true;
+    } catch(ex) {
+        console.error('execute failed: ' + cmd + ', error: ' + ex);
+        return false;
     }
 }
 
@@ -81,6 +92,8 @@ if (args[0] === '--kill') {
 }
 
 
-var out = execute(cli + ' ' + addQuoteToArgs(args).join(' '));
-console.log(out);
-process.exit(0);
+var success = executeVoid(cli + ' ' + addQuoteToArgs(args).join(' '));
+if (success) {
+    process.exit(0);
+}
+process.exit(1);
