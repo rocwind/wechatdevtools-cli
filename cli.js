@@ -79,13 +79,14 @@ if (!cli || !fs.existsSync(cli)) {
 
 // parse commandline and handle it
 var args = process.argv.slice(2);
-if (args.length === 0) {
-    console.log('usage: wechatdevtools [ --kill | <cli options> ]');
+if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
+    executeVoid(cli + ' -h');
+    console.log('  --kill         Kill all IDE processes');
     process.exit(0);
 }
 
 if (args[0] === '--kill') {
-    console.log('killing running instances...');
+    console.log('killing running IDE processes...');
     cliCleaner[process.platform]();
     process.exit(0);
 }
