@@ -20,7 +20,7 @@ function executeVoid(cmd) {
     try {
         execSync(cmd, { stdio: [0, 1, 2] });
         return true;
-    } catch(ex) {
+    } catch (ex) {
         console.error('execute failed: ' + cmd + ', error: ' + ex);
         return false;
     }
@@ -30,28 +30,28 @@ function addQuoteToCmd(cmd) {
     if (!cmd) {
         return cmd;
     }
-    if (cmd.indexOf(' ') === -1
-        || /^"[^"]+"$/.test(cmd)
-        || /^'[^']+'$/.test(cmd)) {
+    if (cmd.indexOf(' ') === -1 || /^"[^"]+"$/.test(cmd) || /^'[^']+'$/.test(cmd)) {
         return cmd;
     }
     return '"' + cmd + '"';
 }
 
 function addQuoteToArgs(args) {
-    return args.map(function(arg) {
+    return args.map(function (arg) {
         return addQuoteToCmd(arg);
     });
 }
 
 // for finding the cli location
 var cliFinder = {
-    darwin: function() {
-        return '/Applications/wechatwebdevtools.app/Contents/Resources/app.nw/bin/cli';
+    darwin: function () {
+        return '/Applications/wechatwebdevtools.app/Contents/MacOS/cli';
     },
 
-    win32: function() {
-        var regInfo = execute('reg query "HKLM\\SOFTWARE\\WOW6432Node\\Tencent\\微信web开发者工具" /ve');
+    win32: function () {
+        var regInfo = execute(
+            'reg query "HKLM\\SOFTWARE\\WOW6432Node\\Tencent\\微信web开发者工具" /ve',
+        );
         var match = /REG_SZ\s+(\S.+)/.exec(regInfo);
         if (!match) {
             // unknown in registry - give a guess with default localtion
@@ -59,18 +59,17 @@ var cliFinder = {
         }
         return addQuoteToCmd(path.join(path.dirname(match[1]), 'cli.bat'));
     },
-}
+};
 
 // for killing wechatdevtools instances
 var cliCleaner = {
-    darwin: function() {
+    darwin: function () {
         execute("ps axco pid,command | grep wechatdevtools | awk '{ print $1; }' | xargs kill -9");
     },
-    win32: function() {
+    win32: function () {
         execute('taskkill /FI "IMAGENAME eq wechatdevtools.exe" /F');
     },
-}
-
+};
 
 var cli = cliFinder[process.platform]();
 if (!cli || !fs.existsSync(cli)) {
@@ -90,7 +89,6 @@ if (args[0] === '--kill') {
     cliCleaner[process.platform]();
     process.exit(0);
 }
-
 
 var success = executeVoid(cli + ' ' + addQuoteToArgs(args).join(' '));
 if (success) {
